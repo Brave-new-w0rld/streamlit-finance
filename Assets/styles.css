@@ -1,0 +1,34 @@
+
+.st-key-apply button p {
+    color: #333333;
+    font: bold 12pt sans-serif;
+}
+
+.st-key-apply button:hover p {
+    color: MidnightBlue;
+}
+
+.st-key-apply button:active {
+    background-color: #0C0C0C;
+}
+
+.st-key-apply button:active p {
+    color: #FFFFFF;
+}
+
+.st-key-currencies button p {
+    font: bold 12pt sans-serif;
+}
+
+.st-key-currencies button {
+    background-color: #191919;
+}
+
+.st-key-clear button {
+    background-color: #999999;
+    color: #191919;
+    width: 100px;
+    min-height: 20px;
+    line-height: 20px;
+    text-wrap: nowrap;
+}
