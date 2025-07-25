@@ -1,8 +1,5 @@
-streamlit
-pandas
-plotly.express
-json
-os
+streamlit==1.46.1
+pandas>2.0
+plotly>6.0.0
 tradermade
 dotenv
-.
