@@ -12,7 +12,7 @@ load_dotenv()
 
 st.set_page_config(page_title="Simple Finance App", page_icon="💰", layout="wide")
 
-with open("assets\\styles.css") as f:
+with open(".\\assets\\styles.css") as f:
     st.html(f"<style>{f.read()}</style>")
 
 category_file = "categories.json"
