@@ -3,7 +3,8 @@ import pandas as pd
 import plotly.express as px
 import json
 import os
-import tradermade as tm
+# import tradermade as tm
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -80,10 +81,13 @@ def clear_filters(start, end):
     return
 
 @st.cache_data(ttl=3600)
-def get_fx_live(pairs):
-    FX_API_KEY = os.getenv("FX_API_KEY")
-    tm.set_rest_api_key(FX_API_KEY)
-    return tm.live(currency=','.join(pairs), fields=["mid"])
+def get_fx_live(ticker, currencies):
+    # FX_API_KEY = os.getenv("FX_API_KEY")
+    response = requests.get(f"https://open.er-api.com/v6/latest/{ticker}").json()["rates"]
+    rates = {k:v for k, v in response.items() if k in currencies}
+    return rates
+    # tm.set_rest_api_key(FX_API_KEY)
+    # return tm.live(currency=','.join(pairs), fields=["mid"])
 
 def main():
     st.title("Simple Finance Dashboard")
@@ -185,13 +189,13 @@ def main():
                 category_totals = category_totals.sort_values("Amount", ascending=False)
 
                 if pres_cur_exp:
-                    pairs = []
-                    for tick in currencies:
-                        pairs.append(tick + pres_cur_exp)
-
-                    fx_live = get_fx_live(pairs)
+                    # pairs = []
+                    # for tick in currencies:
+                    #     pairs.append(tick + pres_cur_exp)
+                    rates_live = get_fx_live(pres_cur_exp, currencies)
                     for idx, row in category_totals.iterrows():
-                        xrate = fx_live.loc[fx_live["instrument"] == (category_totals.at[idx, "Currency"] + pres_cur_exp)]["mid"].values[0]
+                        xrate = rates_live[category_totals.at[idx, "Currency"]]
+                    #     xrate = fx_live.loc[fx_live["instrument"] == (category_totals.at[idx, "Currency"] + pres_cur_exp)]["mid"].values[0]
                         category_totals.at[idx, "Amount in curr."] = category_totals.at[idx, "Amount"] * xrate
 
                 exp_summary = st.data_editor(
@@ -248,13 +252,14 @@ def main():
                 income_df["Amount in curr."] = 0.00
 
                 if pres_cur_inc:
-                    pairs = []
-                    for tick in currencies:
-                        pairs.append(tick + pres_cur_inc)
+                    # pairs = []
+                    # for tick in currencies:
+                    #     pairs.append(tick + pres_cur_inc)
 
-                    fx_live = get_fx_live(pairs)
+                    rates_live = get_fx_live(pres_cur_inc, currencies)
                     for idx, row in income_df.iterrows():
-                        xrate = fx_live.loc[fx_live["instrument"] == (income_df.at[idx, "Currency"] + pres_cur_inc)]["mid"].values[0]
+                        xrate = rates_live[income_df.at[idx, "Currency"]]
+                        # xrate = fx_live.loc[fx_live["instrument"] == (income_df.at[idx, "Currency"] + pres_cur_inc)]["mid"].values[0]
                         income_df.at[idx, "Amount in curr."] = income_df.at[idx, "Amount"] * xrate
 
 
