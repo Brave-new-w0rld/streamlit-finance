@@ -12,7 +12,7 @@ load_dotenv()
 
 st.set_page_config(page_title="Simple Finance App", page_icon="💰", layout="wide")
 
-with open("assets/styles.css") as f:
+with open("assets\\styles.css") as f:
     st.html(f"<style>{f.read()}</style>")
 
 category_file = "categories.json"
@@ -170,7 +170,6 @@ def main():
                         descr = row["Description"]
                         st.session_state.debits_df.at[idx, "Category"] = new_category
                         add_keyword_to_category(new_category, descr)
-                        # st.rerun()
 
                 st.subheader("Expenses Summary")
 
